@@ -1,0 +1,689 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  ShieldCheck, 
+  Cpu, 
+  Users, 
+  CreditCard, 
+  Warehouse, 
+  Printer, 
+  Globe, 
+  Mail, 
+  ChevronRight,
+  TrendingUp,
+  Award,
+  Settings,
+  Zap,
+  Layers,
+  Send,
+  CheckCircle2,
+  HelpCircle,
+  Calculator,
+  Play,
+  MousePointer2,
+  Linkedin,
+  Clock
+} from 'lucide-react';
+
+const translations = {
+  ua: {
+    nav: {
+      home: "Головна",
+      services: "Послуги",
+      process: "Процес",
+      calc: "Калькулятор",
+      business: "Бізнес",
+      production: "Виробництво",
+      contact: "Контакти"
+    },
+    hero: {
+      title: "TECH-DYNAMIC",
+      subtitle: "Інноваційне бюро 3D-прототипування",
+      desc: "Ми перетворюємо цифрові ідеї на фізичні об'єкти з точністю до мікрона. Рішення для стартапів та інженерних бюро.",
+      founders: "Засновники: Пилипенко Даніїл, Клічук Михайло"
+    },
+    process: {
+      title: "Як ми працюємо",
+      steps: [
+        { title: "Завантаження", desc: "Ви надсилаєте нам STEP/STL файл вашої моделі.", icon: <MousePointer2 /> },
+        { title: "Аналіз", desc: "Наші інженери перевіряють модель на DFM (Design for Manufacturing).", icon: <Settings /> },
+        { title: "Друк", desc: "Виробництво на промислових принтерах з контролем якості.", icon: <Printer /> },
+        { title: "Доставка", desc: "Клічук Михайло особисто контролює логістику до ваших дверей.", icon: <Zap /> }
+      ]
+    },
+    calc: {
+      title: "Попередній розрахунок",
+      weight: "Вага деталі (грам)",
+      material: "Тип пластику",
+      result: "Орієнтовна вартість",
+      cta: "Отримати точну пропозицію"
+    },
+    services: {
+      title: "Наші послуги",
+      list: [
+        { 
+          title: "Прототипування", 
+          desc: "Швидке створення функціональних прототипів для тестування дизайну та ергономіки.",
+          icon: <Zap className="text-amber-400" />
+        },
+        { 
+          title: "Дрібносерійне виробництво", 
+          desc: "Випуск партій від 10 до 500 одиниць без витрат на дорогі прес-форми.",
+          icon: <Layers className="text-cyan-400" />
+        },
+        { 
+          title: "Інженерний дизайн", 
+          desc: "Оптимізація моделей під 3D-друк (DFM) та розробка механізмів.",
+          icon: <Settings className="text-violet-400" />
+        }
+      ]
+    },
+    business: {
+      title: "Бізнес-структура",
+      form: {
+        title: "Форма власності",
+        name: "ТОВ (Товариство з обмеженою відповідальністю)",
+        desc: "Оптимально для залучення інвестицій та обмеження відповідальності."
+      },
+      finance: {
+        title: "Фінансування",
+        bank: "Ощадбанк (Програма 5-7-9%)",
+        rate: "Ставка: 7% річних",
+        capital: "Власний капітал: 40%",
+        payback: "Окупність: 14-18 місяців"
+      }
+    },
+    production: {
+      title: "Виробничі потужності",
+      equipment: "Промислове обладнання",
+      materials: "Матеріали",
+      printers: [
+        { name: "Bambulab X1E", price: "~$2,499", specs: "Швидкісний друк інженерними пластиками" },
+        { name: "Formlabs Form 3+", price: "~$3,750", specs: "Високоточний стереолітографічний друк" }
+      ],
+      matList: "Monofilament (Україна), Фотополімери (Німеччина)"
+    },
+    contact: {
+      title: "Залишити заявку",
+      name: "Ваше ім'я",
+      email: "Електронна пошта",
+      message: "Опишіть ваш проєкт",
+      send: "Надіслати запит",
+      success: "Дякуємо! Ми зв'яжемося з вами найближчим часом."
+    },
+    team: {
+      title: "Наша команда",
+      daniil: { role: "Маркетинг та стратегія", name: "Пилипенко Даніїл" },
+      mykhailo: { role: "Логістика та ресурси", name: "Клічук Михайло" }
+    }
+  },
+  en: {
+    nav: {
+      home: "Home",
+      services: "Services",
+      process: "Workflow",
+      calc: "Estimator",
+      business: "Business",
+      production: "Production",
+      contact: "Contact"
+    },
+    hero: {
+      title: "TECH-DYNAMIC",
+      subtitle: "Innovative 3D Prototyping Bureau",
+      desc: "Transforming digital ideas into physical objects with micron precision. Solutions for startups and engineering firms.",
+      founders: "Founders: Daniil Pylypenko, Mykhailo Klychuk"
+    },
+    process: {
+      title: "How We Work",
+      steps: [
+        { title: "Upload", desc: "You send us the STEP/STL file of your model.", icon: <MousePointer2 /> },
+        { title: "Analysis", desc: "Our engineers check the model for DFM (Design for Manufacturing).", icon: <Settings /> },
+        { title: "Printing", desc: "Production on industrial printers with quality control.", icon: <Printer /> },
+        { title: "Delivery", desc: "Mykhailo Klychuk personally manages logistics to your door.", icon: <Zap /> }
+      ]
+    },
+    calc: {
+      title: "Quick Estimator",
+      weight: "Part weight (grams)",
+      material: "Material type",
+      result: "Approximate cost",
+      cta: "Get a formal quote"
+    },
+    services: {
+      title: "Our Services",
+      list: [
+        { 
+          title: "Prototyping", 
+          desc: "Rapid creation of functional prototypes for design and ergonomics testing.",
+          icon: <Zap className="text-amber-400" />
+        },
+        { 
+          title: "Small-batch Production", 
+          desc: "Batches from 10 to 500 units without expensive mold costs.",
+          icon: <Layers className="text-cyan-400" />
+        },
+        { 
+          title: "Engineering Design", 
+          desc: "Optimization of models for 3D printing (DFM) and mechanism development.",
+          icon: <Settings className="text-violet-400" />
+        }
+      ]
+    },
+    business: {
+      title: "Business Structure",
+      form: {
+        title: "Legal Form",
+        name: "LLC (Limited Liability Company)",
+        desc: "Optimal for attracting investment and limiting liability."
+      },
+      finance: {
+        title: "Financing",
+        bank: "Oschadbank (5-7-9% Program)",
+        rate: "Rate: 7% APR",
+        capital: "Equity: 40%",
+        payback: "Payback: 14-18 months"
+      }
+    },
+    production: {
+      title: "Production Capacity",
+      equipment: "Industrial Equipment",
+      materials: "Materials",
+      printers: [
+        { name: "Bambulab X1E", price: "~$2,499", specs: "High-speed engineering plastics printing" },
+        { name: "Formlabs Form 3+", price: "~$3,750", specs: "High-precision stereolithography" }
+      ],
+      matList: "Monofilament (UA), Photopolymers (Germany)"
+    },
+    contact: {
+      title: "Get a Quote",
+      name: "Your Name",
+      email: "Email Address",
+      message: "Project Description",
+      send: "Send Inquiry",
+      success: "Thank you! We will contact you shortly."
+    },
+    team: {
+      title: "Our Team",
+      daniil: { role: "Marketing & Strategy", name: "Daniil Pylypenko" },
+      mykhailo: { role: "Logistics & Resources", name: "Mykhailo Klychuk" }
+    }
+  }
+};
+
+const GlassCard = ({ children, className = "" }) => (
+  <div className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 hover:border-white/20 ${className}`}>
+    {children}
+  </div>
+);
+
+export default function App() {
+  const [lang, setLang] = useState('ua');
+  const [activeSection, setActiveSection] = useState('home');
+  const [isSent, setIsSent] = useState(false);
+  
+  // Calculator State
+  const [calcWeight, setCalcWeight] = useState(100);
+  const [calcMaterial, setCalcMaterial] = useState(1); // 1 = standard, 2 = resin
+  const [totalCost, setTotalCost] = useState(0);
+
+  const t = translations[lang];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            entry.target.classList.remove('opacity-0', 'translate-y-10');
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [lang]);
+
+  useEffect(() => {
+    // Basic calculation logic: Base price + (weight * material factor)
+    const base = 250; 
+    const factor = calcMaterial === 1 ? 5 : 15;
+    setTotalCost(base + (calcWeight * factor));
+  }, [calcWeight, calcMaterial]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSent(true);
+    setTimeout(() => setIsSent(false), 5000);
+  };
+
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <div className="min-h-screen bg-[#020617] text-slate-200 selection:bg-cyan-500/30 font-sans overflow-x-hidden">
+      {/* Background Decorative Elements */}
+      <div className="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden -z-10">
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-cyan-600/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px]" />
+        <div className="absolute top-[30%] left-[20%] w-[300px] h-[300px] bg-violet-600/5 rounded-full blur-[100px]" />
+      </div>
+
+      {/* Header */}
+      <header className="fixed top-0 w-full z-50 bg-[#020617]/80 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3 group cursor-pointer" onClick={() => scrollTo('home')}>
+            <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-500/10 group-hover:rotate-12 transition-transform">
+              <Cpu className="text-white" size={24} />
+            </div>
+            <span className="text-xl font-bold tracking-tighter text-white">TECH-DYNAMIC</span>
+          </div>
+
+          <nav className="hidden xl:flex items-center gap-8">
+            {Object.keys(t.nav).map((key) => (
+              <button
+                key={key}
+                onClick={() => scrollTo(key)}
+                className={`text-[11px] font-black tracking-[0.2em] transition-all hover:text-cyan-400 uppercase ${activeSection === key ? 'text-cyan-400' : 'text-slate-500'}`}
+              >
+                {t.nav[key]}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setLang(lang === 'ua' ? 'en' : 'ua')}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-all font-bold text-xs"
+            >
+              <Globe size={14} className="text-cyan-400" />
+              {lang.toUpperCase()}
+            </button>
+            <button 
+              onClick={() => scrollTo('contact')}
+              className="hidden sm:block px-5 py-2 bg-white text-black rounded-lg text-sm font-black transition-all hover:scale-105 active:scale-95"
+            >
+              {lang === 'ua' ? 'Старт' : 'Start'}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto space-y-40">
+        
+        {/* Section: Hero */}
+        <section id="home" className="reveal opacity-0 translate-y-10 transition-all duration-1000 flex flex-col items-center text-center py-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black mb-8 tracking-widest uppercase">
+            <Zap size={12} className="animate-pulse" /> 2024 Industrial Prototyping
+          </div>
+          <h1 className="text-6xl md:text-9xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-600 leading-[0.9] tracking-tighter">
+            {t.hero.title}
+          </h1>
+          <p className="text-xl md:text-2xl text-cyan-400/90 font-medium mb-10 max-w-3xl">
+            {t.hero.subtitle}
+          </p>
+          <p className="max-w-2xl text-slate-400 text-lg leading-relaxed mb-12">
+            {t.hero.desc}
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-4 mb-20">
+            <button onClick={() => scrollTo('process')} className="px-8 py-4 bg-white text-black font-black rounded-xl hover:bg-cyan-400 transition-all flex items-center gap-2 group">
+              {lang === 'ua' ? 'Почати проєкт' : 'Start Project'} <Play size={18} className="fill-current" />
+            </button>
+            <button onClick={() => scrollTo('calc')} className="px-8 py-4 bg-white/5 border border-white/10 font-black rounded-xl hover:bg-white/10 transition-all">
+              {lang === 'ua' ? 'Калькулятор вартості' : 'Cost Estimator'}
+            </button>
+          </div>
+
+          <GlassCard className="max-w-3xl w-full flex flex-col md:flex-row items-center justify-between gap-6 py-6 border-cyan-500/10">
+             <div className="flex items-center gap-4">
+               <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center">
+                 <Users className="text-indigo-400" size={20} />
+               </div>
+               <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">{t.hero.founders}</span>
+             </div>
+             <div className="h-px w-full md:h-10 md:w-px bg-white/10" />
+             <div className="flex items-center gap-4">
+               <ShieldCheck className="text-cyan-400" size={20} />
+               <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">
+                 {lang === 'ua' ? 'Виробничий кластер Києва' : 'Kyiv Production Cluster'}
+               </span>
+             </div>
+          </GlassCard>
+        </section>
+
+        {/* Section: Process (Workflow) */}
+        <section id="process" className="reveal opacity-0 translate-y-10 transition-all duration-1000 space-y-16">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">{t.process.title}</h2>
+            <p className="text-slate-500 max-w-xl mx-auto italic">{lang === 'ua' ? 'Ми робимо складне простим.' : 'We make complex things simple.'}</p>
+          </div>
+          
+          <div className="relative">
+            <div className="absolute top-1/2 left-0 w-full h-px bg-white/5 hidden lg:block -translate-y-1/2" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {t.process.steps.map((step, i) => (
+                <div key={i} className="relative group flex flex-col items-center text-center">
+                  <div className="w-20 h-20 rounded-2xl bg-[#0a1122] border border-white/10 flex items-center justify-center mb-6 z-10 group-hover:border-cyan-500 transition-colors shadow-2xl">
+                    <div className="text-cyan-400">
+                      {React.cloneElement(step.icon, { size: 32 })}
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-black mb-2 uppercase tracking-tight">{step.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed px-4">{step.desc}</p>
+                  <div className="mt-4 text-[10px] font-black text-cyan-500/40">STEP 0{i+1}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Section: Calculator */}
+        <section id="calc" className="reveal opacity-0 translate-y-10 transition-all duration-1000">
+          <GlassCard className="max-w-4xl mx-auto overflow-hidden border-cyan-500/20">
+            <div className="flex flex-col md:flex-row gap-12 p-4">
+              <div className="flex-1 space-y-8">
+                <div className="flex items-center gap-3">
+                  <Calculator className="text-cyan-400" />
+                  <h2 className="text-2xl font-black uppercase">{t.calc.title}</h2>
+                </div>
+                
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase text-slate-500 flex justify-between">
+                    {t.calc.weight} <span>{calcWeight}g</span>
+                  </label>
+                  <input 
+                    type="range" min="10" max="2000" step="10"
+                    value={calcWeight}
+                    onChange={(e) => setCalcWeight(e.target.value)}
+                    className="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                  />
+                </div>
+
+                <div className="space-y-4">
+                   <label className="text-[10px] font-black uppercase text-slate-500">{t.calc.material}</label>
+                   <div className="grid grid-cols-2 gap-4">
+                      <button 
+                        onClick={() => setCalcMaterial(1)}
+                        className={`py-3 rounded-xl border text-xs font-bold transition-all ${calcMaterial === 1 ? 'border-cyan-500 bg-cyan-500/10 text-cyan-400' : 'border-white/5 bg-white/5 text-slate-500'}`}
+                      >
+                        FDM (Plastic)
+                      </button>
+                      <button 
+                        onClick={() => setCalcMaterial(2)}
+                        className={`py-3 rounded-xl border text-xs font-bold transition-all ${calcMaterial === 2 ? 'border-indigo-500 bg-indigo-500/10 text-indigo-400' : 'border-white/5 bg-white/5 text-slate-500'}`}
+                      >
+                        SLA (Resin)
+                      </button>
+                   </div>
+                </div>
+              </div>
+
+              <div className="flex-1 bg-white/5 rounded-2xl p-8 flex flex-col justify-between items-center text-center border border-white/5">
+                <div className="space-y-2">
+                  <p className="text-[10px] font-black uppercase text-slate-500">{t.calc.result}</p>
+                  <p className="text-5xl font-black text-white">~{totalCost} ₴</p>
+                </div>
+                <div className="w-full space-y-4">
+                  <p className="text-[10px] text-slate-600 leading-tight">
+                    * {lang === 'ua' ? 'Ціна є орієнтовною і не включає складність геометрії.' : 'Price is approximate and doesn\'t include geometry complexity.'}
+                  </p>
+                  <button onClick={() => scrollTo('contact')} className="w-full py-4 bg-cyan-600 text-white rounded-xl font-black text-sm hover:bg-cyan-500 transition-all">
+                    {t.calc.cta}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </GlassCard>
+        </section>
+
+        {/* Section: Services */}
+        <section id="services" className="reveal opacity-0 translate-y-10 transition-all duration-1000 space-y-16">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">{t.services.title}</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {t.services.list.map((item, i) => (
+              <GlassCard key={i} className="group hover:-translate-y-2 transition-all">
+                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:rotate-6 transition-transform">
+                  {item.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-4 uppercase tracking-tighter">{item.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+              </GlassCard>
+            ))}
+          </div>
+        </section>
+
+        {/* Section: Business Model */}
+        <section id="business" className="reveal opacity-0 translate-y-10 transition-all duration-1000 space-y-16">
+          <div className="space-y-4">
+            <h2 className="text-4xl font-black uppercase tracking-tighter">{t.business.title}</h2>
+            <div className="h-1.5 w-24 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <GlassCard className="lg:col-span-1 border-l-4 border-l-cyan-500 relative overflow-hidden group">
+               <Award className="text-cyan-400/20 absolute -right-4 -bottom-4 group-hover:scale-110 transition-transform" size={140} />
+              <div className="relative z-10">
+                <h3 className="font-black text-xl mb-2">{t.business.form.title}</h3>
+                <p className="text-cyan-400 font-black mb-4">{t.business.form.name}</p>
+                <p className="text-sm text-slate-400 leading-relaxed">{t.business.form.desc}</p>
+              </div>
+            </GlassCard>
+
+            <GlassCard className="lg:col-span-2">
+              <div className="flex items-center gap-3 mb-10">
+                <CreditCard className="text-indigo-400" />
+                <h3 className="text-xl font-black uppercase tracking-tighter">{t.business.finance.title}</h3>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="space-y-6">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-[10px] text-slate-500 uppercase font-black mb-1">{t.business.finance.bank}</p>
+                      <p className="text-lg font-bold">5-7-9% Program</p>
+                    </div>
+                    <span className="text-cyan-400 font-black text-2xl">7%</span>
+                  </div>
+                  <div className="h-2.5 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-cyan-500 w-[60%] rounded-full" />
+                  </div>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black italic">Credit Limit Active</p>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-[10px] text-slate-500 uppercase font-black mb-1">{lang === 'ua' ? 'Фінансування' : 'Funding'}</p>
+                      <p className="text-lg font-bold">{t.business.finance.capital}</p>
+                    </div>
+                    <span className="text-indigo-400 font-black text-2xl">40%</span>
+                  </div>
+                  <div className="h-2.5 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-indigo-500 w-[40%] rounded-full" />
+                  </div>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black italic">{t.business.finance.payback}</p>
+                </div>
+              </div>
+            </GlassCard>
+          </div>
+        </section>
+
+        {/* Section: Production */}
+        <section id="production" className="reveal opacity-0 translate-y-10 transition-all duration-1000 space-y-16">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <h2 className="text-4xl font-black uppercase tracking-tighter">{t.production.title}</h2>
+            <div className="flex items-center gap-3 px-5 py-2 bg-green-500/10 rounded-full border border-green-500/20 text-[10px] font-black text-green-400 uppercase tracking-widest">
+              <Clock size={12} /> Live Factory Updates
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {t.production.printers.map((printer, idx) => (
+              <GlassCard key={idx} className="relative group overflow-hidden border-white/5">
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-10">
+                    <div className="p-4 bg-white/5 rounded-2xl border border-white/5">
+                      <Printer className="text-cyan-400" size={32} />
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Pricing</p>
+                      <p className="text-2xl font-black text-white">{printer.price}</p>
+                    </div>
+                  </div>
+                  <h3 className="text-3xl font-black mb-3 tracking-tighter">{printer.name}</h3>
+                  <p className="text-slate-400 mb-8 max-w-xs text-sm leading-relaxed">{printer.specs}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {['PA12-CF', 'Tough Resin', 'TPU', 'PC'].map(m => (
+                      <span key={m} className="text-[9px] font-black px-3 py-1 bg-white/5 rounded-full border border-white/5 text-slate-400">{m}</span>
+                    ))}
+                  </div>
+                </div>
+              </GlassCard>
+            ))}
+          </div>
+
+          <GlassCard className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center bg-indigo-600/5">
+            <div className="space-y-3">
+              <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">{t.production.materials}</h4>
+              <p className="text-slate-300 font-bold text-lg">{t.production.matList}</p>
+            </div>
+            <div className="hidden lg:block h-12 w-px bg-white/10 mx-auto" />
+            <div className="space-y-3 lg:text-right">
+              <h4 className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Kyiv Lab</h4>
+              <p className="text-slate-300 font-bold text-lg">Unit.City Innovation District</p>
+            </div>
+          </GlassCard>
+        </section>
+
+        {/* Section: Contact & Team */}
+        <section id="contact" className="reveal opacity-0 translate-y-10 transition-all duration-1000 grid grid-cols-1 lg:grid-cols-5 gap-16">
+          
+          <div className="lg:col-span-2 space-y-12">
+            <div>
+              <h2 className="text-4xl font-black mb-6 uppercase tracking-tighter">{lang === 'ua' ? 'Контакти' : 'Contact'}</h2>
+              <p className="text-slate-400 leading-relaxed mb-8">
+                {lang === 'ua' 
+                  ? 'Ми готові обговорити ваш інженерний виклик. Засновники особисто супроводжують кожен проєкт.'
+                  : 'We are ready to discuss your engineering challenge. Founders personally oversee every project.'}
+              </p>
+              
+              <div className="space-y-4">
+                <div className="flex items-center gap-5 p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-cyan-500/30 transition-all cursor-pointer group">
+                  <Mail className="text-cyan-400 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <p className="text-[10px] text-slate-500 uppercase font-black">Email</p>
+                    <p className="font-bold tracking-tight">office@tech-dynamic.ua</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <div className="relative w-20 h-20 bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center group overflow-hidden">
+                   <span className="text-xl font-black text-slate-700">DP</span>
+                   <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Linkedin size={24} className="text-cyan-400" />
+                   </div>
+                </div>
+                <div>
+                  <p className="text-sm font-black uppercase tracking-tight">{t.team.daniil.name}</p>
+                  <p className="text-[10px] text-cyan-400 uppercase font-black tracking-[0.2em]">{t.team.daniil.role}</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="relative w-20 h-20 bg-white/5 rounded-3xl border border-white/10 flex items-center justify-center group overflow-hidden">
+                   <span className="text-xl font-black text-slate-700">MK</span>
+                   <div className="absolute inset-0 bg-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Linkedin size={24} className="text-indigo-400" />
+                   </div>
+                </div>
+                <div>
+                  <p className="text-sm font-black uppercase tracking-tight">{t.team.mykhailo.name}</p>
+                  <p className="text-[10px] text-indigo-400 uppercase font-black tracking-[0.2em]">{t.team.mykhailo.role}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-3">
+            <GlassCard className="p-10 border-t-8 border-t-cyan-600 shadow-cyan-500/10">
+              {isSent ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center space-y-6 animate-in fade-in zoom-in">
+                  <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center">
+                    <CheckCircle2 className="text-green-500" size={48} />
+                  </div>
+                  <h3 className="text-3xl font-black uppercase">{t.contact.success}</h3>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-slate-500 ml-1">{t.contact.name}</label>
+                      <input required type="text" className="w-full bg-white/5 border border-white/10 rounded-xl p-5 focus:outline-none focus:border-cyan-500 transition-all font-bold" placeholder="Daniil P." />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase text-slate-500 ml-1">{t.contact.email}</label>
+                      <input required type="email" className="w-full bg-white/5 border border-white/10 rounded-xl p-5 focus:outline-none focus:border-cyan-500 transition-all font-bold" placeholder="daniil@tech.ua" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-500 ml-1">{t.contact.message}</label>
+                    <textarea required rows="4" className="w-full bg-white/5 border border-white/10 rounded-xl p-5 focus:outline-none focus:border-cyan-500 transition-all resize-none font-bold" placeholder="..." />
+                  </div>
+                  <button type="submit" className="w-full py-6 bg-white text-black font-black uppercase tracking-widest rounded-xl shadow-2xl hover:bg-cyan-400 transition-all active:scale-[0.98]">
+                    {t.contact.send}
+                  </button>
+                </form>
+              )}
+            </GlassCard>
+          </div>
+        </section>
+
+      </main>
+
+      <footer className="border-t border-white/5 py-24 bg-[#01030a]">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="space-y-6 md:col-span-2">
+            <div className="flex items-center gap-3">
+              <Cpu className="text-cyan-500" />
+              <span className="font-black text-2xl tracking-tighter text-white">TECH-DYNAMIC</span>
+            </div>
+            <p className="text-slate-500 text-sm max-w-sm font-medium leading-relaxed uppercase tracking-tighter">
+              BUREAU OF INNOVATIVE 3D PROTOTYPING AND MANUFACTURING. BUILDING THE FUTURE IN KYIV.
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            <h4 className="text-[10px] font-black uppercase text-white tracking-[0.3em]">Links</h4>
+            <nav className="flex flex-col gap-2">
+              <a onClick={() => scrollTo('services')} className="text-sm text-slate-600 hover:text-cyan-400 cursor-pointer transition-colors font-bold">Services</a>
+              <a onClick={() => scrollTo('calc')} className="text-sm text-slate-600 hover:text-cyan-400 cursor-pointer transition-colors font-bold">Estimator</a>
+              <a onClick={() => scrollTo('business')} className="text-sm text-slate-600 hover:text-cyan-400 cursor-pointer transition-colors font-bold">Business</a>
+            </nav>
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="text-[10px] font-black uppercase text-white tracking-[0.3em]">Social</h4>
+            <div className="flex gap-4">
+              <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 cursor-pointer transition-all">
+                <Linkedin size={18} />
+              </div>
+              <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 cursor-pointer transition-all">
+                <Mail size={18} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-6 mt-20 pt-8 border-t border-white/5 text-[10px] font-black text-slate-700 uppercase tracking-[0.4em] text-center">
+           TECH-DYNAMIC © 2024 / PROTOTYPING REVOLUTION / UKRAINE
+        </div>
+      </footer>
+    </div>
+  );
+}
