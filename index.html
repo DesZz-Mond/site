@@ -3,515 +3,554 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BurgerTime | Швидко. Смачно. Доступно.</title>
+    <title>Підготовка до співбесіди з біології (9 клас)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome для іконок -->
+    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Nunito', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            yellow: '#FFC72C', // McDonald's like yellow
-                            red: '#DA291C',    // McDonald's like red
-                            dark: '#27251F',
-                            light: '#F8F9FA'
-                        }
+                        primary: '#0ea5e9',
+                        secondary: '#10b981',
+                        dark: '#1e293b'
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Плавна прокрутка та кастомний скроллбар */
-        html { scroll-behavior: smooth; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #DA291C; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #b81d12; }
-        
-        /* Анімація для кошика */
-        .cart-slide-enter { transform: translateX(100%); }
-        .cart-slide-active { transform: translateX(0); transition: transform 0.3s ease-out; }
-        .cart-slide-exit { transform: translateX(100%); transition: transform 0.3s ease-in; }
-
-        .category-btn.active {
-            background-color: #DA291C;
-            color: white;
-            border-color: #DA291C;
+        /* Custom styles for smooth accordions and nice scrollbars */
+        body {
+            background-color: #f8fafc;
         }
-        
-        /* Повідомлення про додавання (Toast) */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 100;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 17px;
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        #toast.show {
-            visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
         }
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        .terms-badge {
+            display: inline-block;
+            background-color: #e0e7ff;
+            color: #4338ca;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin: 0.2rem;
+            border: 1px solid #c7d2fe;
+        }
     </style>
 </head>
-<body class="font-sans bg-brand-light text-brand-dark antialiased">
+<body class="text-gray-800 antialiased font-sans">
 
-    <!-- Навігація -->
-    <nav class="bg-white shadow-md fixed w-full z-40 top-0 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Логотип -->
-                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <i class="fa-solid fa-burger text-brand-red text-3xl mr-2"></i>
-                    <span class="font-black text-2xl tracking-tight text-brand-dark">Burger<span class="text-brand-yellow">Time</span></span>
+    <!-- Header -->
+    <header class="bg-dark text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-microscope text-3xl text-primary"></i>
+                    <div>
+                        <h1 class="text-xl font-bold">Біологія 9 клас</h1>
+                        <p class="text-sm text-gray-400">Підготовка до співбесіди (Медсестринство, Фармація)</p>
+                    </div>
                 </div>
-                
-                <!-- Меню десктоп -->
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#menu" class="text-gray-700 hover:text-brand-red font-bold text-lg transition">Меню</a>
-                    <a href="#about" class="text-gray-700 hover:text-brand-red font-bold text-lg transition">Про нас</a>
-                    <a href="#locations" class="text-gray-700 hover:text-brand-red font-bold text-lg transition">Заклади</a>
-                </div>
-
-                <!-- Кнопки справа (Кошик) -->
-                <div class="flex items-center space-x-4">
-                    <button onclick="toggleCart()" class="relative p-2 text-gray-700 hover:text-brand-red transition">
-                        <i class="fa-solid fa-basket-shopping text-2xl"></i>
-                        <span id="cart-badge" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-brand-red rounded-full">0</span>
-                    </button>
-                    <button class="md:hidden text-gray-700 text-2xl" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
+                <!-- Search Bar -->
+                <div class="relative w-full md:w-72">
+                    <input type="text" id="searchInput" placeholder="Пошук теми або терміну..." 
+                        class="w-full bg-gray-700 text-white rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400 text-sm">
+                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400"></i>
                 </div>
             </div>
         </div>
-        <!-- Мобільне меню -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-            <a href="#menu" class="block py-3 px-4 text-center font-bold text-gray-700 hover:bg-gray-50 hover:text-brand-red">Меню</a>
-            <a href="#about" class="block py-3 px-4 text-center font-bold text-gray-700 hover:bg-gray-50 hover:text-brand-red">Про нас</a>
-            <a href="#locations" class="block py-3 px-4 text-center font-bold text-gray-700 hover:bg-gray-50 hover:text-brand-red">Заклади</a>
-        </div>
-    </nav>
+    </header>
 
-    <!-- Головний банер (Hero) -->
-    <section class="relative pt-20 pb-12 lg:pt-32 lg:pb-24 overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Burger Background" class="w-full h-full object-cover opacity-20">
-            <div class="absolute inset-0 bg-gradient-to-r from-brand-yellow/90 to-brand-yellow/40"></div>
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">💡 Як користуватися сайтом:</h2>
+            <ul class="list-disc pl-5 text-gray-600 space-y-1 text-sm">
+                <li>Усі теми розділені на блоки. Натисніть на тему, щоб розгорнути її. Інформація на 100% відповідає офіційній програмі.</li>
+                <li><strong class="text-primary">🧠 ЗНАТИ І РОЗУМІТИ</strong> — теоретична база, класифікації, процеси, представники.</li>
+                <li><strong class="text-secondary">🛠 УМІТИ</strong> — практичні навички (що треба вміти розрізняти візуально або порівнювати).</li>
+                <li><strong class="text-indigo-600">Терміни</strong> — спеціальні поняття, які потрібно вивчити напам'ять.</li>
+            </ul>
         </div>
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
-                <span class="inline-block py-1 px-3 rounded-full bg-brand-red text-white font-bold text-sm mb-4 uppercase tracking-wide">Новинка сезону</span>
-                <h1 class="text-5xl md:text-7xl font-black text-brand-dark leading-tight mb-6">
-                    Крафтові бургери.<br>
-                    <span class="text-white drop-shadow-md">Твій Час.</span>
-                </h1>
-                <p class="text-xl text-brand-dark/80 font-semibold mb-8 max-w-lg">
-                    Швидко. Смачно. Доступно. Замовляй улюблений фаст-фуд біля НАУ та КПІ або забирай із собою без черг!
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#menu" class="bg-brand-red hover:bg-red-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 text-center">
-                        Зробити замовлення
-                    </a>
-                    <a href="#about" class="bg-white hover:bg-gray-50 text-brand-dark font-bold py-4 px-8 rounded-full text-lg shadow-md transition text-center">
-                        Дізнатись більше
-                    </a>
-                </div>
-            </div>
-            <div class="md:w-1/2 relative">
-                <!-- Головне зображення бургера -->
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Signature Burger" class="w-full max-w-md mx-auto rounded-full shadow-2xl border-8 border-white object-cover aspect-square z-10 relative transform md:rotate-3 hover:rotate-0 transition duration-500">
-                <!-- Декоративні елементи -->
-                <div class="absolute top-0 right-10 bg-white p-4 rounded-2xl shadow-xl font-bold text-xl text-brand-red transform rotate-12 z-20">
-                    Топ ціна!<br>180 ₴
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Секція Меню -->
-    <section id="menu" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-black text-brand-dark mb-4">Наше Меню</h2>
-                <div class="w-24 h-1 bg-brand-red mx-auto rounded"></div>
-                <p class="mt-4 text-gray-500 font-semibold">Свіжі інгредієнти, крафтові булки та соковите м'ясо.</p>
-            </div>
-
-            <!-- Фільтри категорій -->
-            <div class="flex flex-wrap justify-center gap-4 mb-12" id="category-filters">
-                <button onclick="filterMenu('all')" class="category-btn active px-6 py-2 rounded-full border-2 border-gray-200 font-bold text-gray-600 hover:border-brand-red transition">Всі</button>
-                <button onclick="filterMenu('burgers')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 font-bold text-gray-600 hover:border-brand-red transition">Бургери</button>
-                <button onclick="filterMenu('snacks')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 font-bold text-gray-600 hover:border-brand-red transition">Снеки</button>
-                <button onclick="filterMenu('drinks')" class="category-btn px-6 py-2 rounded-full border-2 border-gray-200 font-bold text-gray-600 hover:border-brand-red transition">Напої</button>
-            </div>
-
-            <!-- Грід Меню -->
-            <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Картки генеруються через JS -->
-            </div>
+        <div class="flex justify-end mb-4">
+            <button id="expandAllBtn" class="text-sm text-primary hover:text-blue-700 font-medium mr-4">Розгорнути всі теми</button>
+            <button id="collapseAllBtn" class="text-sm text-gray-500 hover:text-gray-700 font-medium">Згорнути всі</button>
         </div>
-    </section>
 
-    <!-- Секція "Про нас" (Переваги) -->
-    <section id="about" class="py-20 bg-brand-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-center gap-16">
-                <div class="lg:w-1/2">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Kitchen Team" class="rounded-2xl shadow-xl w-full">
-                </div>
-                <div class="lg:w-1/2">
-                    <h2 class="text-4xl font-black text-brand-dark mb-6">Філософія BurgerTime</h2>
-                    <p class="text-lg text-gray-600 mb-6">
-                        Ми — локальний фаст-фуд нового покоління. Наша мета довести, що швидка їжа може бути по-справжньому якісною. Ми не використовуємо заморожені котлети мас-маркету, а співпрацюємо з локальними виробниками м'яса та крафтовими пекарнями.
-                    </p>
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-brand-yellow text-brand-dark mt-1">
-                                <i class="fa-solid fa-clock"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-xl font-bold">Видача за 5 хвилин</h4>
-                                <p class="text-gray-500">Ти цінуєш час, а ми цінуємо тебе. Оптимізована кухня.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-brand-yellow text-brand-dark mt-1">
-                                <i class="fa-solid fa-cow"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-xl font-bold">100% Українська Яловичина</h4>
-                                <p class="text-gray-500">Щоденні поставки свіжого м'яса та овочів.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-brand-yellow text-brand-dark mt-1">
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-xl font-bold">Чесна ціна</h4>
-                                <p class="text-gray-500">Середній чек 200 грн. Доступно кожному студенту.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <!-- Container for dynamic content -->
+        <div id="contentContainer" class="space-y-8">
+            <!-- JS will inject sections here -->
         </div>
-    </section>
 
-    <!-- Секція Локацій -->
-    <section id="locations" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-4xl font-black text-brand-dark mb-4">Наші Локації</h2>
-            <div class="w-24 h-1 bg-brand-red mx-auto rounded mb-12"></div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition">
-                    <i class="fa-solid fa-location-dot text-4xl text-brand-red mb-4"></i>
-                    <h3 class="text-2xl font-bold mb-2">Точка "КПІ"</h3>
-                    <p class="text-gray-600 mb-4">Вул. Політехнічна, поруч з метро та головним корпусом.</p>
-                    <p class="font-bold text-brand-dark"><i class="fa-regular fa-clock mr-2"></i>09:00 - 22:00</p>
-                </div>
-                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition">
-                    <i class="fa-solid fa-location-dot text-4xl text-brand-red mb-4"></i>
-                    <h3 class="text-2xl font-bold mb-2">Точка "НАУ"</h3>
-                    <p class="text-gray-600 mb-4">Проспект Гузара, біля студмістечка. Ідеально для перерви.</p>
-                    <p class="font-bold text-brand-dark"><i class="fa-regular fa-clock mr-2"></i>09:00 - 22:00</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    </main>
 
-    <!-- Футер -->
-    <footer class="bg-brand-dark text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <div class="flex items-center mb-4">
-                    <i class="fa-solid fa-burger text-brand-yellow text-3xl mr-2"></i>
-                    <span class="font-black text-2xl tracking-tight">Burger<span class="text-brand-red">Time</span></span>
-                </div>
-                <p class="text-gray-400">Твій улюблений крафтовий фаст-фуд.<br>ФОП Клічук М. & ФОП Пилипенко Д.</p>
-            </div>
-            <div>
-                <h4 class="text-xl font-bold mb-4">Посилання</h4>
-                <ul class="space-y-2 text-gray-400">
-                    <li><a href="#menu" class="hover:text-brand-yellow transition">Меню</a></li>
-                    <li><a href="#about" class="hover:text-brand-yellow transition">Про компанію</a></li>
-                    <li><a href="#locations" class="hover:text-brand-yellow transition">Карта закладів</a></li>
-                    <li><a href="#" class="hover:text-brand-yellow transition">Вакансії</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-bold mb-4">Слідкуй за нами</h4>
-                <div class="flex space-x-4">
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-red transition">
-                        <i class="fa-brands fa-instagram"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-red transition">
-                        <i class="fa-brands fa-tiktok"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-brand-red transition">
-                        <i class="fa-brands fa-telegram"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-            &copy; 2026 BurgerTime. Всі права захищені. Навчальний проект.
-        </div>
+    <footer class="bg-gray-100 border-t border-gray-200 py-6 mt-12 text-center text-sm text-gray-500">
+        <p>Створено на основі офіційної програми КМФК ім. Є.Й. Мухіна</p>
     </footer>
 
-    <!-- Overlay для кошика -->
-    <div id="cart-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden transition-opacity" onclick="toggleCart()"></div>
-
-    <!-- Бічна панель кошика -->
-    <div id="cart-panel" class="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-50 shadow-2xl flex flex-col transform cart-slide-enter hidden">
-        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
-            <h2 class="text-2xl font-black text-brand-dark"><i class="fa-solid fa-basket-shopping mr-2 text-brand-red"></i> Твоє замовлення</h2>
-            <button onclick="toggleCart()" class="text-gray-500 hover:text-brand-red text-2xl">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        
-        <!-- Товари в кошику -->
-        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
-            <!-- Тут рендеряться товари з JS -->
-            <div class="text-center text-gray-500 mt-10" id="empty-cart-msg">
-                <i class="fa-solid fa-burger text-6xl text-gray-200 mb-4"></i>
-                <p>Твій кошик поки що порожній.</p>
-                <p class="text-sm">Час додати щось смачненьке!</p>
-            </div>
-        </div>
-
-        <!-- Підвал кошика -->
-        <div class="p-6 border-t bg-gray-50">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-lg font-bold text-gray-600">Разом до сплати:</span>
-                <span class="text-3xl font-black text-brand-dark" id="cart-total">0 ₴</span>
-            </div>
-            <button onclick="checkout()" class="w-full bg-brand-red hover:bg-red-700 text-white font-bold py-4 rounded-xl text-lg shadow-md transition flex justify-center items-center">
-                Оформити замовлення <i class="fa-solid fa-arrow-right ml-2"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Toast повідомлення -->
-    <div id="toast">Товар додано до кошика!</div>
-
-    <!-- СКРИПТИ (Логіка додатку) -->
+    <!-- Application Logic and Data -->
     <script>
-        // --- БАЗА ДАНИХ МЕНЮ ---
-        const menuItems = [
-            { id: 1, name: 'Класичний Смеш', category: 'burgers', price: 180, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Дві яловичі смеш-котлети, чеддер, мариновані огірки, фірмовий соус, крафтова булка.' },
-            { id: 2, name: 'Подвійний Чеддер', category: 'burgers', price: 240, img: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Величезна порція м\'яса, подвійний сир чеддер, бекон, свіжий томат та салат айсберг.' },
-            { id: 3, name: 'Кріспі Чікен', category: 'burgers', price: 190, img: 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Хрустке куряче філе у паніровці, салат коул-слоу, соус світ-чилі.' },
-            { id: 4, name: 'Вега Бургер', category: 'burgers', price: 170, img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Котлета з рослинного м\'яса, гуакамоле, свіжі овочі, соус песто.' },
-            { id: 5, name: 'Картопля Фрі (Стандарт)', category: 'snacks', price: 70, img: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Хрустка золотиста картопелька з сіллю.' },
-            { id: 6, name: 'Картопля по-селянськи', category: 'snacks', price: 85, img: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Запечені дольки картоплі зі спеціями та часником.' },
-            { id: 7, name: 'Сирні Палички (5 шт)', category: 'snacks', price: 120, img: 'https://images.unsplash.com/photo-1531749668029-2db88e4276c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Тягуча моцарела у хрусткій паніровці. Журавлинний соус у подарунок.' },
-            { id: 8, name: 'Coca-Cola 0.5л', category: 'drinks', price: 50, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Охолоджений класичний напій.' },
-            { id: 9, name: 'Крафтовий Лимонад', category: 'drinks', price: 80, img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80', desc: 'Освіжаючий лимонад власного приготування з м\'ятою та цитрусами.' },
+        // Data parsed and structured from the provided PDF (Complete and unshortened)
+        const biologyData = [
+            {
+                section: "Розділ 1. Хімічний склад, структура клітин. Спадковість",
+                icon: "fa-dna",
+                topics: [
+                    {
+                        title: "1. Хімічний склад клітини",
+                        know: [
+                            "Класифікація хімічних елементів: макроелементи (в т.ч. органогенні) та мікроелементи.",
+                            "Біологічна роль неорганічних сполук: води, кисню, йонів (Na+, K+, Cl-, Ca2+, Mg2+).",
+                            "Будова, основні властивості та функції органічних сполук: білків, вуглеводів, ліпідів (на прикладі жирів та фосфоліпідів), нуклеїнових кислот, АТФ.",
+                            "Особливості просторової організації білків, нуклеїнових кислот, полісахаридів (крохмаль, целюлоза).",
+                            "Роль хімічних зв'язків (ковалентні, йонні, водневі) та гідрофобної взаємодії в структурній організації макромолекул.",
+                            "Властивості та принципи функціонування ферментів.",
+                            "Роль АТФ в енергозабезпеченні."
+                        ],
+                        do: [
+                            "Визначати правильність застосування вказаних понять і термінів."
+                        ],
+                        terms: ["біополімер", "мономер", "макроелементи", "органогенні елементи", "мікроелементи", "гідрофільні і гідрофобні сполуки", "денатурація", "ренатурація", "реплікація", "ферменти", "коферменти", "активний центр фермента", "конформація", "принцип комплементарності", "ген", "макроергічний зв'язок", "ендемічні захворювання"]
+                    },
+                    {
+                        title: "2. Структура та функціонування еукаріотичних клітин",
+                        know: [
+                            "Клітина як елементарна одиниця живого. Основні принципи організації клітин еукаріотів.",
+                            "Методи дослідження клітин: мікроскопія (світлова, електронна), диференційне центрифугування.",
+                            "Клітинні мембрани: хімічний склад, структура, властивості, основні функції. Роль мембран в клітинній взаємодії.",
+                            "Механізми транспортування речовин через мембрани (активний та пасивний).",
+                            "Цитоплазма та її компоненти: цитоскелет, органели та включення.",
+                            "Одномембранні органели: ендоплазматична сітка (ЕПС), апарат Гольджі, лізосоми, вакуолі.",
+                            "Двомембранні органели: мітохондрії (кристи, матрикс), пластиди (хлоропласти, лейкопласти, хромопласти).",
+                            "Автономія мітохондрій і хлоропластів у клітині. Їх функціональна роль.",
+                            "Немембранні органели: рибосоми (будова, роль), центріолі, органели руху (джгутики, війки).",
+                            "Ядро: будова, функціональна роль у збереженні, передачі та реалізації спадкової інформації. Ядерце.",
+                            "Хромосоми: хімічний склад, будова, функціональна роль. Гомологічні хромосоми. Гаплоїдний і диплоїдний набори. Значення стабільності каріотипу.",
+                            "Основні стани хромосом: інтерфазний некомпактний та надкомпактизація у процесі клітинного поділу. Подвоєння хромосом (ДНК). Морфологія мітотичних хромосом.",
+                            "Причини відмінностей у будові клітин рослин, тварин, грибів."
+                        ],
+                        do: [
+                            "Характеризувати клітину як елементарну одиницю живого.",
+                            "Візуально розпізнавати клітини рослин, тварин та їх компоненти.",
+                            "Встановлювати зв'язок між будовою й функціями компонентів клітини.",
+                            "Розрізняти: активний і пасивний транспорт, екзо- і ендоцитоз (фаго- і піноцитоз), стани хромосом, гаплоїдний і диплоїдний набори.",
+                            "Порівнювати організацію клітин рослин, грибів, тварин."
+                        ],
+                        terms: ["еукаріоти", "активний та пасивний транспорт", "ендоцитоз (фагоцитоз, піноцитоз)", "екзоцитоз", "плазмоліз", "деплазмоліз", "кристи", "тилакоїди", "ламели", "матрикс", "строма", "цитоплазма", "плазмодесми", "органели", "включення", "каріоплазма", "хромосоми", "гомологічні хромосоми", "гаплоїдний і диплоїдний набори", "хроматин", "нуклеосома", "центромера", "плечі хромосоми", "каріотип"]
+                    },
+                    {
+                        title: "3. Закономірності спадковості і мінливості",
+                        know: [
+                            "Генетика — наука про закономірності спадковості і мінливості організмів.",
+                            "Класичні методи генетичних досліджень: гібридологічний, генеалогічний, популяційно-статистичний, цитогенетичний, біохімічний, близнюковий. Їхні особливості та діагностичне значення.",
+                            "Основні закономірності функціонування генів у прокаріотів та еукаріотів."
+                        ],
+                        do: [
+                            "Визначати правильність застосування вказаних понять і термінів."
+                        ],
+                        terms: ["алель", "генотип", "фенотип", "домінантний алель", "рецесивний алель", "гомозигота", "гетерозигота", "чиста лінія", "гібрид"]
+                    },
+                    {
+                        title: "4. Закономірності спадковості організмів",
+                        know: [
+                            "Закономірності спадковості Г. Менделя: Правило чистоти гамет. Закони: І - одноманітності (домінування), ІІ - розщеплення, ІІІ - незалежного комбінування ознак.",
+                            "Аналізуюче схрещування (метод перевірки генотипу).",
+                            "Проміжний характер успадкування (неповне домінування). Кодомінування (визначення груп крові людини).",
+                            "Множинна дія генів. Ознака як результат прояву багатьох генів. Взаємодія генів.",
+                            "Хромосомна теорія спадковості. Зчеплене успадкування. Причини відхилень від типових співвідношень Менделя.",
+                            "Генетичні основи визначення статі. Хромосомне визначення статі. Успадкування, зчеплене зі статтю.",
+                            "Хромосомний аналіз як метод виявлення порушень. Спадкові захворювання і вади людини, захворювання зі спадковою схильністю.",
+                            "Сучасні молекулярно-генетичні методи досліджень спадковості людини."
+                        ],
+                        do: [
+                            "Розрізняти: типи взаємодії алелів (повне/неповне домінування, кодомінування); типи успадкування ознак у людини (аутосомно-рецесивне, аутосомно-домінантне, зчеплене зі статтю).",
+                            "Визначати: розподіл фенотипів нащадків і можливі генотипи батьків.",
+                            "Аналізувати: каріотипи, родоводи людини; результати моно/дигібридного схрещування.",
+                            "Порівнювати наслідки аналізуючого схрещування при незалежному та зчепленому успадкуванні.",
+                            "Розв'язувати типові задачі з генетики (повне/неповне домінування, групи крові, зчеплене зі статтю).",
+                            "Обґрунтовувати цілісність генотипу та значення вивчення законів спадковості."
+                        ],
+                        terms: ["статеві хромосоми", "аутосоми", "гомо- та гетерогаметна стать", "аналізуюче схрещування", "генофонд", "спадкові захворювання"]
+                    }
+                ]
+            },
+            {
+                section: "Розділ 2. Біорізноманіття (Ботаніка, Зоологія)",
+                icon: "fa-leaf",
+                topics: [
+                    {
+                        title: "5. Водорості",
+                        know: [
+                            "Особливості будови та життєдіяльності одноклітинних та багатоклітинних водоростей. Умови поширення.",
+                            "<b>Зелені водорості:</b> хламідомонада, хлорела, улотрикс, спірогіра, ульва.",
+                            "<b>Діатомові водорості:</b> пінулярія, навікула.",
+                            "<b>Бурі водорості:</b> ламінарія, фукус, саргасум.",
+                            "<b>Червоні водорості:</b> порфіра, філофора, кораліна."
+                        ],
+                        do: [
+                            "Візуально розпізнавати та характеризувати вказані види водоростей.",
+                            "Пояснювати особливості будови як результат адаптації до середовища мешкання."
+                        ],
+                        terms: ["зооспори", "талом/слань"]
+                    },
+                    {
+                        title: "6. Вегетативні органи та життєві функції рослин",
+                        know: [
+                            "Особливості будови клітин рослин. Основні групи тканин рослин: <b>покривні</b> (шкірочка, корок), <b>провідні</b> (судини, ситовидні трубки), <b>основні</b> (фотосинтезуюча, запасаюча/ендосперм, механічна), <b>твірні</b> (верхівкова, бічна).",
+                            "<b>Корінь:</b> види (головний, додаткові, бічні), типи систем (стрижнева, мичкувата). Зони кореня, внутрішня будова (зона кореневих волосків). Видозміни кореня: коренеплоди, бульбокорені, дихальні, опорні, чіпкі, повітряні, корені-присоски.",
+                            "<b>Пагін:</b> основні частини (вузол, міжвузля, листкова пазуха). Типи пагонів: прямостоячі, висхідні, виткі, чіпкі, повзучі, сланкі. Брунька (луски, конус наростання, зачаткові листки). Види бруньок: верхівкова/бічна, вегетативна/генеративна.",
+                            "Галуження пагона, формування крони. <b>Видозміни пагона:</b> підземні (кореневище, підземна стеблова бульба, цибулина, бульбоцибулина), надземні (вуса, вусики, надземна бульба, колючки).",
+                            "<b>Стебло:</b> внутрішня будова дерев'янистого стебла (серцевина, деревина, камбій, луб, корок, серцевинні промені, річні кільця).",
+                            "<b>Листок:</b> зовнішня будова (основа, черешок, пластинка, прилистки), внутрішня (основна тканина стовпчаста і губчаста, продихи, жилки, кутикула, шкірочка). Жилкування (паралельне, дугове, пальчасте, пірчасте, вильчасте). Листкорозміщення (почергове, супротивне, кільчасте). Видозміни листка (вусики, колючки, лусочки, листки-пастки). Листопад.",
+                            "<b>Життєві функції:</b> мінеральне живлення, фотосинтез (умови), дихання, транспірація (вплив атмосфери, продихів, пристосування до зменшення). Переміщення речовин. Рухи рослин. Регулятори росту."
+                        ],
+                        do: [
+                            "Візуально розпізнавати: тканини, вегетативні органи, зони/видозміни кореня, елементи внутрішньої будови стебла і листка, типи бруньок і пагонів.",
+                            "Розрізняти: прості і складні листки; черешкові і сидячі листки; типи жилкування і кореневих систем.",
+                            "Порівнювати: мичкувату і стрижневу системи, вегетативні і генеративні бруньки, процеси фотосинтезу і дихання."
+                        ],
+                        terms: ["судинно-волокнистий пучок", "камбій", "ксилема", "флоема", "висхідний і низхідний потоки", "кореневий тиск", "присисна сила листків", "фітогормони", "фітонциди", "вічнозелені рослини"]
+                    },
+                    {
+                        title: "7. Генеративні органи та розмноження",
+                        know: [
+                            "<b>Квітка:</b> квітконіжка, квітколоже, тичинка (пиляк, нитка, пилкові зерна), чашолистки, пелюстки (оцвітина), маточка (приймочка, стовпчик, зав'язь верхня/нижня з зародковими мішками). Формула квітки.",
+                            "Різноманітність квіток: одно/двостатеві, голі, з простою/подвійною оцвітиною.",
+                            "<b>Суцвіття:</b> прості (китиця, початок, головка, кошик, щиток, зонтик, простий колос), складні (складний колос, волоть, складний щиток, складний зонтик).",
+                            "Запилення (самозапилення, перехресне вітром/комахами). Адаптації рослин. Подвійне запліднення.",
+                            "<b>Насінина:</b> будова (шкірка, зародковий корінець, підсім'ядольне коліно, сім'ядоля, рубчик, ендосперм). Особливості одно- та дводольних.",
+                            "<b>Плід:</b> будова, типи плодів (сухі розкривні/нерозкривні, соковиті, одно/багатонасінні).",
+                            "Форми і способи розмноження рослин (в т.ч. вегетативне)."
+                        ],
+                        do: [
+                            "Візуально розпізнавати: елементи квітки, насінини, типи суцвіть, типи плодів, способи вегетативного розмноження (живцювання, щеплення, відводками, кореневими паростками, видозміненими пагонами).",
+                            "Розрізняти: однодомні/дводомні рослини, квітки з простою/подвійною оцвітиною.",
+                            "Аналізувати формулу квітки. Визначати спосіб запилення і поширення плодів за їх будовою."
+                        ],
+                        terms: ["пилкова трубка", "пилковхід", "ендосперм", "розмноження", "життєвий цикл", "спора", "спорофіт", "гаметофіт", "спорангії", "гаметангії", "архегонії", "антеридії"]
+                    },
+                    {
+                        title: "8. Різноманітність рослин",
+                        know: [
+                            "Поняття про чергування поколінь (нестатеве та статеве). Особливості будови, поширення та значення:",
+                            "<b>Мохи:</b> політрих, маршанція, сфагнум.",
+                            "<b>Плауни:</b> селагінела, баранець звичайний, плаун булавовидний.",
+                            "<b>Хвощі:</b> хвощ польовий, хвощ лісовий.",
+                            "<b>Папороті:</b> щитник чоловічий, орляк, листовик, страусник, сальвінія.",
+                            "<b>Голонасінні:</b> гінкго дволопатеве, тис ягідний, туя, кипарис, сосна, ялина, модрина, яловець, кедр, вельвічія дивовижна, ефедра, саговник.",
+                            "<b>Покритонасінні:</b> причини панування, відмінності однодольних і дводольних.",
+                            "Родини Покритонасінних та їх представники: <b>Капустяні/Хрестоцвіті</b> (грицики, редька дика, капуста, гірчиця, рапс), <b>Розові</b> (суниця, шипшина, горобина, яблуня, вишня), <b>Бобові</b> (горох, квасоля, конюшина, робінія/біла акація, люцерна), <b>Пасльонові</b> (петунія, паслін, тютюн, картопля, томат, перець), <b>Айстрові/Складноцвіті</b> (соняшник, ромашка, волошка, кульбаба, будяк), <b>Цибулеві</b> (цибуля, часник, черемша), <b>Лілійні</b> (тюльпан, проліска, лілія), <b>Злакові</b> (кукурудза, рис, пшениця, жито, овес, очерет, пирій)."
+                        ],
+                        do: [
+                            "Візуально розпізнавати вказані види рослин.",
+                            "Розрізняти статеве і нестатеве покоління мохів, папоротей, хвощів, плаунів.",
+                            "Порівнювати: статеве і нестатеве розмноження, життєві цикли спорових та насінних, голонасінні і покритонасінні рослини."
+                        ],
+                        terms: []
+                    },
+                    {
+                        title: "9. Гриби та Лишайники",
+                        know: [
+                            "Відмінності грибів від рослин і тварин. Будова та процеси життєдіяльності шапинкових, цвілевих грибів та дріжджів.",
+                            "Гриби сапротрофи, паразити, симбіотрофи. Значення у природі, харчовій промисловості, фармакології.",
+                            "<b>Шапинкові гриби:</b> маслюк, білий гриб, підосичник, опеньки, печериці, мухомор, бліда поганка.",
+                            "<b>Цвілеві гриби:</b> мукор, пеніцил, аспергіл.",
+                            "<b>Гриби-паразити рослин:</b> трутовики, борошнисто-росяні, сажки, ріжки.",
+                            "<b>Лишайники:</b> асоціації справжніх грибів з фотосинтезуючими організмами (водоростями/ціанобактеріями). Способи живлення та розмноження.",
+                            "Типи талому лишайників: <b>накипні</b> (леканора), <b>листуваті</b> (пармелія), <b>кущисті</b> (кладонія)."
+                        ],
+                        do: [
+                            "Візуально розпізнавати та характеризувати елементи будови шапинкових і цвілевих грибів, види лишайників.",
+                            "Розрізняти: шапинкові гриби з трубчастим і пластинчастим гіменофором; гомеомерний та гетеромерний таломи лишайників.",
+                            "Визначати взаємозв'язки грибів з іншими організмами."
+                        ],
+                        terms: ["слань (талом)", "ризоїди", "ізидії", "біоіндикатори"]
+                    },
+                    {
+                        title: "10. Одноклітинні тваринноподібні та Губки",
+                        know: [
+                            "<b>Одноклітинні гетеротрофні:</b> середовища існування, будова, прояви життєдіяльності (живлення, осморегуляція, рух, дихання, виділення, розмноження, подразливість, інцистування).",
+                            "Мешканці прісних водойм: амеба протей, інфузорія-туфелька.",
+                            "Паразити: дизентерійна амеба, малярійний плазмодій. Захворювання (дизентерія, малярія) та їх профілактика.",
+                            "<b>Губки (бодяга):</b> первинні багатоклітинні тварини на дотканинному рівні організації. Особливості будови, живлення, дихання, виділення, розмноження, спосіб життя."
+                        ],
+                        do: [
+                            "Візуально розпізнавати вказані організми та їх органели.",
+                            "Обґрунтовувати заходи профілактики захворювань, що викликаються паразитичними одноклітинними."
+                        ],
+                        terms: ["гетеротрофи", "циста", "скоротливі вакуолі", "травні вакуолі", "псевдоніжки", "війки", "вегетативне ядро", "генеративне ядро", "остаточний хазяїн", "проміжний хазяїн", "мезоглея"]
+                    },
+                    {
+                        title: "11. Справжні багатоклітинні тварини: Будова та Поведінка",
+                        know: [
+                            "Тканини тварин. Типи симетрії (двобічна, радіальна). Типи порожнини тіла (первинна, вторинна, змішана). Покриви тіла.",
+                            "<b>Системи органів:</b> Опорно-рухова (зовнішній/внутрішній скелет, гідроскелет, мускулатура), Травна (замкнений/наскрізний кишечник, залози), Кровоносна (замкнена/незамкнена), Нервова (дифузна, гангліонарна, трубчаста), Дихання (зябра, трахеї, легеневі мішки, легені), Виділення (нирки, мальпігієві судини, протонефридії, метанефридії). Органи чуття.",
+                            "Статеві клітини, статеві залози, форми розмноження і запліднення. Типи розвитку.",
+                            "<b>Поведінка тварин:</b> вроджена (інстинкти) і набута (научіння). Форми поведінки: дослідницька, харчова, захисна, гігієнічна, репродуктивна, територіальна, соціальна. Способи орієнтування. Міграції. Хомінг. Комунікації. Елементарна розумова діяльність."
+                        ],
+                        do: [
+                            "Визначати тип кровоносної, нервової системи, симетрії тіла.",
+                            "Порівнювати: транспорт речовин, травні, дихальні, нервові системи, будову скелета, головного мозку у різних груп.",
+                            "Розрізняти: типи порожнини тіла, типи розвитку (прямий/непрямий), способи пересування, форми запліднення.",
+                            "Пояснювати циклічні зміни поведінки, розрізняти форми поведінки."
+                        ],
+                        terms: ["ектодерма", "ентодерма", "мезодерма", "двошарові і тришарові тварини", "гермафродити", "прямий і непрямий розвиток", "інстинкт", "научіння", "міграція", "хомінг", "угруповання тварин"]
+                    },
+                    {
+                        title: "12. Різноманітність тварин (Представники)",
+                        know: [
+                            "<b>Жалкі / Кишковопорожнинні:</b> медуза аврелія, медуза коренерот, гідра, актинія, мадрепорові корали.",
+                            "<b>Плоскі черви:</b> планарія молочнобіла. Паразити: Сисуни (печінковий, котячий), Стьожкові (бичачий та свинячий ціп'яки, ехінокок, стьожак широкий).",
+                            "<b>Нематоди / Круглі черви:</b> аскарида людська, гострик, трихінела.",
+                            "<b>Кільчасті черви:</b> Багатощетинкові (нереїс), Малощетинкові (дощовий черв'як, трубочник), П'явки (медична п'явка).",
+                            "<b>Членистоногі:</b> <i>Ракоподібні</i> (річкові раки, краби, креветки, дафнії, циклопи, мокриці). <i>Павукоподібні</i> (павук-хрестовик, каракурт, тарантул, коростяний свербун, собачий кліщ). <i>Комахи:</i> Таргани, Прямокрилі (коник, сарана), Твердокрилі/Жуки (травневий хрущ, сонечко, жук-олень, колорадський жук), Перетинчастокрилі (бджола, мурашки), Лускокрилі/Метелики (білан капустяний, шовкопряд, махаон), Двокрилі (муха, малярійний комар). Паразитичні та кровосисні (блохи, воші, клопи, ґедзі, оводи).",
+                            "<b>Молюски:</b> Черевоногі (виноградний слимак, ставковик, слизуни), Двостулкові (беззубки, перлівниці, мідії), Головоногі (кальмари, каракатиці, восьминоги).",
+                            "<b>Хордові - Риби:</b> різноманітність, адаптації до води. <b>Амфібії:</b> водно-наземний спосіб життя. <b>Рептилії:</b> адаптації до суходолу.",
+                            "<b>Птахи:</b> Безкілеві (страуси, ківі), Кілегруді: Пінгвіноподібні, Дятлоподібні, Куроподібні (перепел, фазан), Гусеподібні (лебідь, качка), Соколоподібні (яструб, беркут), Совоподібні, Лелекоподібні, Журавлеподібні, Горобцеподібні. Будова яйця.",
+                            "<b>Ссавці:</b> Першозвірі (качкодзьоб, єхидна), Сумчасті (кенгуру, коала), Плацентарні: Комахоїдні (їжак, кріт), Рукокрилі (вечірниця, нетопир), Гризуни (бабак, білка, бобер, миша, хом'як, пацюк, нутрія), Хижі (вовк, собака, лисиця, тигр, лев, рись, кіт, ведмідь, куниця, соболь), Китоподібні (синій кит, кашалот, косатка, дельфін), Парнокопитні (нежуйні: кабан, бегемот; жуйні: зубр, козуля, лось, кози, вівці), Непарнокопитні (кінь, зебра, кулан, носоріг), Примати.",
+                            "Шляхи зараження людини паразитами, сезонні явища в житті хребетних."
+                        ],
+                        do: [
+                            "Візуально розпізнавати указаних представників тварин.",
+                            "Розрізняти: життєві форми жалких (медузи/поліпи), птахів виводкових і нагніздних, птахів осілих/кочових/перелітних, комах з повним/неповним перетворенням, риб морських/прісноводних/прохідних.",
+                            "Класифікувати тварин, порівнювати будову яйця птахів і рептилій.",
+                            "Обґрунтовувати заходи профілактики захворювань, викликаних паразитичними червами і членистоногими."
+                        ],
+                        terms: ["переносники збудників"]
+                    }
+                ]
+            },
+            {
+                section: "Розділ 3. Організм людини як біологічна система",
+                icon: "fa-heart-pulse",
+                topics: [
+                    {
+                        title: "13. Будова тіла людини. Нервова та Гуморальна регуляція",
+                        know: [
+                            "Місце людини в органічному світі. Організм як відкрита система. Гомеостаз.",
+                            "<b>Типи тканин:</b> нервова; епітеліальні (покривний, залозистий); м'язові (посмугована скелетна, посмугована серцева, непосмугована/гладка); внутрішнього середовища (кров, лімфа, кісткова, хрящова, сполучні).",
+                            "<b>Нервова система:</b> нейрон, нейроглія, синапс, медіатори. Рефлекторна дуга. Центральна (спинний і головний мозок, борозни, звивини, біла/сіра речовина) та периферична НС (черепномозкові та спинномозкові нерви). Вегетативна (симпатичний і парасимпатичний відділи) та соматична НС. Функціональне значення зон кори.",
+                            "<b>Ендокринна система (Гуморальна регуляція):</b> органи, гормони та нейрогормони. Залози внутрішньої, змішаної та зовнішньої секреції. Властивості гормонів, принцип регуляції. Гіпоталамо-гіпофізарна система. Наслідки гіпер- та гіпофункції залоз."
+                        ],
+                        do: [
+                            "Розпізнавати типи тканин, органи, відділи та долі головного мозку, ендокринні залози.",
+                            "Розрізняти чутливі, рухові, змішані нерви.",
+                            "Співвідносити гормони і залози, характеризувати вплив гормонів на обмін речовин.",
+                            "Порівнювати нервову і гуморальну регуляцію, доводити їх участь у забезпеченні гомеостазу."
+                        ],
+                        terms: ["тканина", "орган", "фізіологічна система", "гомеостаз", "нейрон", "нейроглія", "нервовий вузол", "рефлекс", "синапс", "медіатор", "мієлінова оболонка", "гормони", "гіпоталамо-гіпофізарна система"]
+                    },
+                    {
+                        title: "14. Внутрішнє середовище. Кровоносна та імунна системи",
+                        know: [
+                            "<b>Внутрішнє середовище:</b> кров, лімфа, тканинна/міжклітинна рідина.",
+                            "<b>Кров:</b> плазма, формені елементи (еритроцити, лейкоцити, тромбоцити). Показники норми (глюкоза, гемоглобін, кількість еритроцитів/лейкоцитів, ШОЕ).",
+                            "Групи крові (АВО), резус-фактор, резус-конфлікт. Правила переливання. Зсідання крові (коагуляція) та її фактори (тромбопластин, протромбін, фібриноген, вітамін К, іони Са).",
+                            "Органи кровотворення: червоний кістковий мозок, селезінка, лімфатичні вузли, тимус.",
+                            "<b>Кровообіг:</b> серцевий м'яз (збудливість, провідність, скоротливість, автоматія). Епікард, міокард, ендокард, перикард. Серцевий цикл (систола, діастола). Частота скорочень, артеріальний тиск. Велике і мале кола. Артерії, вени, капіляри, коронарні судини.",
+                            "<b>Імунна система:</b> центральні органи (кістковий мозок, тимус) та периферійні (селезінка, лімфовузли, мигдалини). Клітини (В- і Т-лімфоцити, макрофаги). Речовини (імуноглобуліни/антитіла, інтерферони, лізоцим). Види імунітету, взаємодія антиген-антитіло. Вакцини, сироватки, імунокорекція, алергії."
+                        ],
+                        do: [
+                            "Розпізнавати формені елементи крові, органи кровообігу (серце, аорту, артерії, вени), елементи серця (шлуночки, передсердя, клапани: двостулковий, тристулковий, легеневий, аортальний).",
+                            "Аналізувати кількісні показники (пульс, тиск) і прогнозувати зміни при навантаженні.",
+                            "Порівнювати будову судин, вроджений і набутий імунітет, лікувальну сироватку і вакцину.",
+                            "Розрізняти види кровотеч і надавати домедичну допомогу."
+                        ],
+                        terms: ["резус-фактор", "донор", "реципієнт", "аглютинація", "анемія", "гемофілія", "гемоліз", "систола/діастола", "провідна система серця", "антиген", "антитіло", "макрофаг"]
+                    },
+                    {
+                        title: "15. Дихання, Травлення, Обмін речовин",
+                        know: [
+                            "<b>Дихання:</b> носова порожнина, носоглотка, гортань (надгортанний хрящ), трахея, бронхи, легені (плевральна порожнина). Газообмін. Показники: дихальний об'єм, резервний об'єм, життєва ємність легень, залишкове повітря. Голосовий апарат.",
+                            "<b>Травлення:</b> ротова порожнина, шлунок, кишечник. Травні залози: слинні, печінка, підшлункова. Склад слини, шлункового, підшлункового, кишкового соків, жовчі. Зуби, зубна формула. Пристінкове травлення, всмоктування, мікрофлора.",
+                            "<b>Обмін речовин (метаболізм):</b> значення білків, жирів, вуглеводів, води, солей. Роль ферментів і АТФ. Енергетичні потреби. Вітаміни (жиро/водорозчинні), їх роль та наслідки нестачі. Знешкодження токсичних сполук."
+                        ],
+                        do: [
+                            "Візуально розпізнавати органи дихання і травлення, види зубів.",
+                            "Складати схему газообміну в легенях і тканинах.",
+                            "Порівнювати склад вдихуваного, видихуваного і альвеолярного повітря.",
+                            "Співвідносити ферменти з травними соками, вітаміни з продуктами.",
+                            "Розпізнавати ознаки харчового отруєння і надавати першу допомогу."
+                        ],
+                        terms: ["дихальний/резервний об'єм", "життєва ємність легень", "дихальний центр", "пристінкове травлення", "метаболізм", "токсини", "збалансоване харчування"]
+                    },
+                    {
+                        title: "16. Виділення, Шкіра, Опорно-рухова та Сенсорні системи",
+                        know: [
+                            "<b>Нирки:</b> будова (кіркова/мозкова речовина, миска, ворота, піраміди). Нефрон (структурна одиниця). Процеси: фільтрація, реабсорбція. Роль нирок, антидіуретичний гормон (вазопресин).",
+                            "<b>Шкіра:</b> епідерміс, дерма, підшкірна клітковина. Меланін. Шкірні залози. Терморегуляція, причини сонячного/теплового удару.",
+                            "<b>Опорно-рухова:</b> хімічний склад, ріст кісток. Окістя, компактна/губчаста речовина, остеон. Типи з'єднань кісток (рухоме, напіврухоме, нерухоме), суглоби. Основні групи скелетних м'язів, міофібрили, актин, міозин. Робота, сила, тонус, втома м'язів. Постава.",
+                            "<b>Сенсорні системи:</b> зорова, слухова, рівноваги, нюху, смаку, дотику, температури, болю. Будова ока і вуха. Акомодація. Короткозорість, далекозорість, астигматизм, дальтонізм."
+                        ],
+                        do: [
+                            "Розпізнавати елементи скелета, будови шкіри, ока, вуха, нирки, нефрона.",
+                            "Порівнювати активну і пасивну частини опорно-рухової системи.",
+                            "Надавати допомогу при сонячному і тепловому ударі.",
+                            "Обґрунтовувати правила догляду за шкірою, гігієну зору і слуху."
+                        ],
+                        terms: ["нефрон", "фільтрація", "реабсорбція", "вазопресин", "епідерміс", "дерма", "меланін", "остеон", "міофібрили", "актин", "міозин", "гіподинамія", "сенсорна адаптація", "акомодація", "дальтонізм"]
+                    },
+                    {
+                        title: "17. Вища нервова діяльність (ВНД) та Репродукція",
+                        know: [
+                            "<b>ВНД:</b> нервові процеси (збудження, гальмування) та їх показники (сила, рухливість, урівноваженість). Умовні (тимчасові зв'язки) та безумовні (інстинкти) рефлекси. Перша і друга сигнальні системи. Пам'ять, навчання. Типи темпераменту. Сон (види сну, значення). Роль кори в мисленні.",
+                            "<b>Репродукція та розвиток:</b> будова статевої системи. Функції залоз. Первинні та вторинні статеві ознаки. Гаметогенез. Розвиток зародка і плода. Функції плаценти. Періоди онтогенезу людини (ембріональний, постембріональний)."
+                        ],
+                        do: [
+                            "Розрізняти інстинктивну і набуту поведінку, умовні і безумовні рефлекси.",
+                            "Порівнювати першу і другу сигнальні системи, типи темпераменту.",
+                            "Візуально розпізнавати статеві клітини та стадії гаметогенезу, встановлювати зв'язок між їх будовою і функціями."
+                        ],
+                        terms: ["збудження", "гальмування", "інстинкт", "тимчасовий нервовий зв'язок", "гаметогенез", "онтогенез", "плацента"]
+                    }
+                ]
+            }
         ];
 
-        // --- СТАН ДОДАТКУ ---
-        let cart = [];
+        // Function to render the content
+        function renderContent() {
+            const container = document.getElementById('contentContainer');
+            container.innerHTML = '';
 
-        // --- РЕНДЕР МЕНЮ ---
-        function renderMenu(category = 'all') {
-            const grid = document.getElementById('menu-grid');
-            grid.innerHTML = ''; // Очищаємо перед рендером
-            
-            const filteredItems = category === 'all' 
-                ? menuItems 
-                : menuItems.filter(item => item.category === category);
+            biologyData.forEach((section, secIndex) => {
+                // Section Header
+                const sectionBlock = document.createElement('div');
+                sectionBlock.className = 'mb-8';
+                
+                const secTitle = document.createElement('h2');
+                secTitle.className = 'text-2xl font-bold text-dark mb-4 border-b-2 border-primary pb-2 flex items-center gap-3';
+                secTitle.innerHTML = `<i class="fa-solid ${section.icon} text-primary"></i> ${section.section}`;
+                sectionBlock.appendChild(secTitle);
 
-            filteredItems.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition duration-300 flex flex-col';
-                card.innerHTML = `
-                    <div class="h-48 overflow-hidden relative">
-                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover transform hover:scale-110 transition duration-500">
-                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full font-black text-brand-dark shadow-sm">
-                            ${item.price} ₴
+                // Topics in section
+                section.topics.forEach((topic, topIndex) => {
+                    const detailsId = `topic-${secIndex}-${topIndex}`;
+                    
+                    let knowHtml = topic.know.map(k => `<li><i class="fa-solid fa-circle-dot text-blue-400 text-xs mr-2 mt-1 flex-shrink-0"></i><span class="block">${k}</span></li>`).join('');
+                    let doHtml = topic.do.map(d => `<li><i class="fa-solid fa-check text-green-500 mr-2 mt-1 flex-shrink-0"></i><span class="block">${d}</span></li>`).join('');
+                    let termsHtml = topic.terms.map(t => `<span class="terms-badge">${t}</span>`).join('');
+
+                    const details = document.createElement('details');
+                    details.className = 'group bg-white rounded-lg shadow-sm border border-gray-200 mb-4 transition-all duration-200 open:ring-1 open:ring-primary overflow-hidden accordion-item';
+                    
+                    details.innerHTML = `
+                        <summary class="p-4 cursor-pointer font-medium text-lg text-gray-800 bg-gray-50 hover:bg-blue-50 group-open:bg-blue-50 group-open:text-primary transition-colors flex justify-between items-center search-target">
+                            ${topic.title}
+                            <i class="fa-solid fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+                        </summary>
+                        <div class="p-5 space-y-6 bg-white border-t border-gray-100">
+                            
+                            <!-- Theory Section -->
+                            <div class="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+                                <h4 class="text-blue-800 font-bold mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-brain"></i> ЗНАТИ І РОЗУМІТИ:
+                                </h4>
+                                <ul class="space-y-3 text-gray-700 text-sm md:text-base pl-2 list-none">
+                                    ${knowHtml}
+                                </ul>
+                            </div>
+
+                            <!-- Practice Section -->
+                            <div class="bg-emerald-50/50 rounded-lg p-4 border border-emerald-100">
+                                <h4 class="text-emerald-800 font-bold mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-tools"></i> УМІТИ:
+                                </h4>
+                                <ul class="space-y-3 text-gray-700 text-sm md:text-base pl-2 list-none">
+                                    ${doHtml}
+                                </ul>
+                            </div>
+
+                            <!-- Terms Section -->
+                            ${topic.terms.length > 0 ? `
+                            <div class="bg-indigo-50/50 rounded-lg p-4 border border-indigo-100">
+                                <h4 class="text-indigo-800 font-bold mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-book"></i> ТЕРМІНИ:
+                                </h4>
+                                <div class="flex flex-wrap gap-1">
+                                    ${termsHtml}
+                                </div>
+                            </div>
+                            ` : ''}
                         </div>
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <h3 class="text-xl font-bold text-brand-dark mb-2">${item.name}</h3>
-                        <p class="text-sm text-gray-500 mb-6 flex-1">${item.desc}</p>
-                        <button onclick="addToCart(${item.id})" class="w-full bg-brand-yellow hover:bg-yellow-500 text-brand-dark font-bold py-3 px-4 rounded-xl transition flex justify-center items-center">
-                            <i class="fa-solid fa-plus mr-2"></i> В кошик
-                        </button>
-                    </div>
-                `;
-                grid.appendChild(card);
+                    `;
+                    sectionBlock.appendChild(details);
+                });
+
+                container.appendChild(sectionBlock);
             });
         }
 
-        // --- ФІЛЬТРАЦІЯ ---
-        function filterMenu(category) {
-            // Оновлюємо активні кнопки
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            renderMenu(category);
-        }
-
-        // --- ЛОГІКА КОШИКА ---
-        function addToCart(id) {
-            const item = menuItems.find(i => i.id === id);
-            const existingItem = cart.find(i => i.id === id);
-
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ ...item, quantity: 1 });
-            }
-            
-            updateCartUI();
-            showToast();
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartUI();
-        }
-
-        function changeQuantity(id, delta) {
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.quantity += delta;
-                if (item.quantity <= 0) {
-                    removeFromCart(id);
-                }
-            }
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            const cartBadge = document.getElementById('cart-badge');
-            const cartItemsContainer = document.getElementById('cart-items');
-            const cartTotal = document.getElementById('cart-total');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-
-            // Рахуємо загальну кількість і суму
-            let totalItems = 0;
-            let totalPrice = 0;
-            
-            cartItemsContainer.innerHTML = '';
-
-            if (cart.length === 0) {
-                cartItemsContainer.appendChild(emptyMsg);
-                emptyMsg.style.display = 'block';
-            } else {
-                emptyMsg.style.display = 'none';
+        // Search Functionality
+        function initSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('.accordion-item');
                 
-                cart.forEach(item => {
-                    totalItems += item.quantity;
-                    totalPrice += item.price * item.quantity;
-
-                    const div = document.createElement('div');
-                    div.className = 'flex items-center gap-4 bg-white p-3 rounded-xl border border-gray-100 shadow-sm';
-                    div.innerHTML = `
-                        <img src="${item.img}" class="w-16 h-16 rounded-lg object-cover">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-brand-dark text-sm leading-tight mb-1">${item.name}</h4>
-                            <div class="text-brand-red font-black text-sm">${item.price} ₴</div>
-                        </div>
-                        <div class="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
-                            <button onclick="changeQuantity(${item.id}, -1)" class="w-6 h-6 flex items-center justify-center bg-white rounded text-gray-600 hover:text-brand-red shadow-sm">-</button>
-                            <span class="w-4 text-center text-sm font-bold">${item.quantity}</span>
-                            <button onclick="changeQuantity(${item.id}, 1)" class="w-6 h-6 flex items-center justify-center bg-white rounded text-gray-600 hover:text-green-600 shadow-sm">+</button>
-                        </div>
-                    `;
-                    cartItemsContainer.appendChild(div);
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(term)) {
+                        item.style.display = 'block';
+                        // Open item if there is a specific search match (optional, but helpful)
+                        if(term.length > 2) item.setAttribute('open', '');
+                    } else {
+                        item.style.display = 'none';
+                        item.removeAttribute('open');
+                    }
                 });
-            }
 
-            cartBadge.innerText = totalItems;
-            cartTotal.innerText = totalPrice + ' ₴';
+                // Hide section headers if all children are hidden
+                const sections = document.querySelectorAll('#contentContainer > div');
+                sections.forEach(sec => {
+                    const visibleItems = sec.querySelectorAll('.accordion-item[style="display: block;"]');
+                    const hasVisibleItems = visibleItems.length > 0 || term === '';
+                    // The h2 element is the first child
+                    sec.querySelector('h2').style.display = hasVisibleItems ? 'flex' : 'none';
+                });
+            });
         }
 
-        function toggleCart() {
-            const panel = document.getElementById('cart-panel');
-            const overlay = document.getElementById('cart-overlay');
-            
-            if (panel.classList.contains('hidden')) {
-                // Відкрити
-                panel.classList.remove('hidden');
-                overlay.classList.remove('hidden');
-                setTimeout(() => {
-                    panel.classList.remove('cart-slide-enter');
-                    panel.classList.add('cart-slide-active');
-                }, 10);
-                document.body.style.overflow = 'hidden'; // Блокуємо скрол фону
-            } else {
-                // Закрити
-                panel.classList.remove('cart-slide-active');
-                panel.classList.add('cart-slide-exit');
-                setTimeout(() => {
-                    panel.classList.add('hidden');
-                    overlay.classList.add('hidden');
-                    panel.classList.remove('cart-slide-exit');
-                    panel.classList.add('cart-slide-enter');
-                }, 300);
-                document.body.style.overflow = '';
-            }
-        }
-
-        function checkout() {
-            if (cart.length === 0) {
-                alert("Ваш кошик порожній!");
-                return;
-            }
-            alert("Дякуємо за замовлення у BurgerTime! (Це тестова версія, замовлення прийнято в обробку).");
-            cart = [];
-            updateCartUI();
-            toggleCart();
-        }
-
-        function showToast() {
-            const toast = document.getElementById("toast");
-            toast.className = "show";
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        // --- ЕФЕКТИ UI ---
-        // Зміна фону навігації при скролі
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 10) {
-                nav.classList.add('shadow-lg');
-                nav.classList.replace('py-4', 'py-2');
-            } else {
-                nav.classList.remove('shadow-lg');
-                nav.classList.replace('py-2', 'py-4');
-            }
+        // Expand/Collapse Buttons
+        document.getElementById('expandAllBtn').addEventListener('click', () => {
+            document.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
+        });
+        document.getElementById('collapseAllBtn').addEventListener('click', () => {
+            document.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
         });
 
-        // Ініціалізація при завантаженні
-        window.onload = () => {
-            renderMenu('all');
-            updateCartUI();
-        };
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent();
+            initSearch();
+        });
+
     </script>
 </body>
 </html>
